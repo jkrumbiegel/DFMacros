@@ -219,7 +219,7 @@ end
 end
 
 module HygieneModule
-    using DataFrameMacros: @passmissing, @transform
+    using DataFrameMacros: @transform
     using DataFrames: DataFrames
     using Test
 
