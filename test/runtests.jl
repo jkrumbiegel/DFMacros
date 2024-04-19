@@ -218,6 +218,21 @@ end
     @test df5 == df2 == df4
 end
 
+module HygieneModule
+    using DataFrameMacros: @passmissing, @transform
+    using DataFrames: DataFrames
+    using Test
+
+    @testset "macro hygiene" begin
+        df = DataFrames.DataFrame(x = [1, 2, 3])
+        @test !(@isdefined ByRow)
+        @test !(@isdefined passmissing)
+        @test !(@isdefined transform)
+        @test @transform(df, :y = @passmissing :x + 1) ==
+            DataFrames.transform(df, :x => DataFrames.ByRow(DataFrames.passmissing(x -> x + 1)) => :y)
+    end
+end
+
 @testset "@subset arg for `transform`" begin
     df = DataFrame(x = 1:4, y = [1, 1, 2, 2])
     df2 = @transform!(df, @subset(:y == 2), :x = 5)
