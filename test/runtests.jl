@@ -1,5 +1,4 @@
 using DataFrameMacros
-using DataFrames
 using Test
 
 @testset "transform & select" begin
@@ -84,9 +83,9 @@ end
 @testset "groupby" begin
     df = DataFrame(a = [-1, 1, -2, 2, -3, 3], b = randn(6))
     gdf = @groupby(df, abs(:a))
-    
+
     gdf2 = @groupby(df, :a = abs(:a))
-    
+
     gdf3 = @groupby(df, :x = abs(:a))
 end
 
@@ -139,7 +138,7 @@ module Mod1
 end
 
 @testset "modules" begin
-    
+
     using .Mod1
 
     df = DataFrame(a = [1, 2, 3])
@@ -220,7 +219,7 @@ end
 end
 
 module HygieneModule
-    using DataFrameMacros
+    using DataFrameMacros: @transform
     using DataFrames: DataFrames
     using Test
 

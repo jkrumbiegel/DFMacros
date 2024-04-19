@@ -27,7 +27,6 @@ If any of these points have changed, please open an issue.
 ## `@select`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -53,7 +52,6 @@ df = DataFrame(a = 1:5, b = 6:10, c = 11:15)
 ## `@transform`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -70,7 +68,6 @@ df = DataFrame(a = 1:5, b = 6:10, c = 11:15)
 ## `@combine`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -89,7 +86,6 @@ end)
 ## `@sort`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Random
 
@@ -103,14 +99,13 @@ df = DataFrame(randn(5, 5), :auto)
 
 df2 = DataFrame(a = [1, 2, 2, 1, 2], b = [4, 4, 4, 3, 3], c = [5, 7, 5, 7, 5])
 
-@sort(df2, :a, :b) 
+@sort(df2, :a, :b)
 @sort(df2, :c - :a - :b)
 ```
 
 ## `@groupby`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Random
 
@@ -130,7 +125,6 @@ df = DataFrame(
 ## `@astable`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 
 df = DataFrame(name = ["Jeff Bezanson", "Stefan Karpinski", "Alan Edelman", "Viral Shah"])
@@ -145,7 +139,6 @@ end)
 ## `@passmissing`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 
 df = DataFrame(short = ["cat", "dog", "mouse", "duck"], long = ["catch", "dogged", missing, "docks"])
@@ -157,7 +150,6 @@ df = DataFrame(short = ["cat", "dog", "mouse", "duck"], long = ["catch", "dogged
 If `{}` contains a multi-column expression, then the function is run for each combination of arguments determined by broadcasting all sets together.
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -174,7 +166,6 @@ df = DataFrame(a = 1:5, b = 6:10, c = 11:15)
 The double brace syntax refers to multiple columns as a tuple, which means that you can aggregate over a larger number of columns than it would be practical to write out explicitly.
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Random
 using Statistics
@@ -201,7 +192,6 @@ DataFrames.jl allows `transform!`ing a view returned by `subset(df, ..., view = 
 If you pass a `@subset` macro call without a dataframe argument to `@transform!`, a view is created automatically, then the transform is executed and the original argument returned.
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -222,7 +212,6 @@ df = DataFrame(
 ## Special case `@nrow`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -235,7 +224,6 @@ df = DataFrame(x = [1, 1, 1, 2, 2])
 ## Special case `@eachindex`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -248,7 +236,6 @@ df = DataFrame(x = [1, 1, 1, 2, 2])
 ## Special case `@proprow`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
@@ -260,7 +247,6 @@ df = DataFrame(x = [1, 1, 1, 2, 2])
 ## Special case `@groupindices`
 
 ```@repl
-using DataFrames
 using DataFrameMacros
 using Statistics
 
