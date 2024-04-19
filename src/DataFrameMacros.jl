@@ -695,7 +695,6 @@ Wrapping with `{}` also allows to use variables or expressions that evaluate to 
 The five expressions in the following code block are equivalent.
 
 ```julia
-
 using DataFrameMacros
 
 df = DataFrame(x = 1:3)
@@ -786,7 +785,6 @@ To compute a centered column with `@transform`, you need access to the whole col
 
 ```julia
 using Statistics
-
 using DataFrameMacros
 
 julia> df = DataFrame(x = 1:3)
