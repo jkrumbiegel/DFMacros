@@ -1,8 +1,9 @@
 module DataFrameMacros
 
 using Base: ident_cmp
-using DataFrames: DataFrames, transform, transform!, select, select!, combine, subset, subset!, ByRow, passmissing, groupby, AsTable, DataFrame, GroupedDataFrame
 using MacroTools: @capture, prewalk, postwalk
+using Reexport: @reexport
+@reexport using DataFrames
 
 export @transform, @transform!, @select, @select!, @combine, @subset, @subset!, @groupby, @sort, @sort!, @unique
 
@@ -106,7 +107,7 @@ function sorthelper(exprs...; mutate)
             temp = $select_call
 
             sp = sortperm(temp; $(kw_exprs...))
-            
+
             df_copy = copy($(esc(df)))
             df_copy[sp, :]
         end
@@ -231,7 +232,7 @@ end
 convert_source_funk_sink_expr(f, x, df) = x
 
 function convert_source_funk_sink_expr(f, e::Expr, df)
-    target, formula = split_formula(e)        
+    target, formula = split_formula(e)
 
     mod_macros, formula = extract_modification_macros(formula)
 
@@ -355,7 +356,7 @@ end
     get_argtypes(x::Type{<:T}) where T<:Tuple = fieldtypes(T)
     argtypes = get_argtypes(arglength_tuple)
     cardinalities = map(cardinality, argtypes)
-    
+
     offsets = 1 .+ [0; cumsum(cardinalities)...]
 
     exprs = map(argtypes, offsets) do al, offset
@@ -694,7 +695,7 @@ Wrapping with `{}` also allows to use variables or expressions that evaluate to 
 The five expressions in the following code block are equivalent.
 
 ```julia
-using DataFrames
+
 using DataFrameMacros
 
 df = DataFrame(x = 1:3)
@@ -734,8 +735,8 @@ There are several options to deal with the problem of multiple new columns:
 ```julia
 julia> df = DataFrame(a_1 = 1:3, b_1 = 4:6)
 3×2 DataFrame
- Row │ a_1    b_1   
-     │ Int64  Int64 
+ Row │ a_1    b_1
+     │ Int64  Int64
 ─────┼──────────────
    1 │     1      4
    2 │     2      5
@@ -743,8 +744,8 @@ julia> df = DataFrame(a_1 = 1:3, b_1 = 4:6)
 
 julia> @transform(df, "result_" * split({}, "_")[1] = sqrt({All()}))
 3×4 DataFrame
- Row │ a_1    b_1    result_a  result_b 
-     │ Int64  Int64  Float64   Float64  
+ Row │ a_1    b_1    result_a  result_b
+     │ Int64  Int64  Float64   Float64
 ─────┼──────────────────────────────────
    1 │     1      4   1.0       2.0
    2 │     2      5   1.41421   2.23607
@@ -785,13 +786,13 @@ To compute a centered column with `@transform`, you need access to the whole col
 
 ```julia
 using Statistics
-using DataFrames
+
 using DataFrameMacros
 
 julia> df = DataFrame(x = 1:3)
 3×1 DataFrame
- Row │ x     
-     │ Int64 
+ Row │ x
+     │ Int64
 ─────┼───────
    1 │     1
    2 │     2
@@ -799,8 +800,8 @@ julia> df = DataFrame(x = 1:3)
 
 julia> @transform(df, :x_centered = @bycol :x .- mean(:x))
 3×2 DataFrame
- Row │ x      x_centered 
-     │ Int64  Float64    
+ Row │ x      x_centered
+     │ Int64  Float64
 ─────┼───────────────────
    1 │     1        -1.0
    2 │     2         0.0
@@ -815,21 +816,21 @@ This can be achieved with the `@passmissing` modifier macro.
 ```julia
 julia> df = DataFrame(name = ["alice", "bob", missing])
 3×1 DataFrame
- Row │ name    
-     │ String? 
+ Row │ name
+     │ String?
 ─────┼─────────
    1 │ alice
    2 │ bob
-   3 │ missing 
+   3 │ missing
 
 julia> @transform(df, :name_upper = @passmissing uppercasefirst(:name))
 3×2 DataFrame
- Row │ name     name_upper 
-     │ String?  String?    
+ Row │ name     name_upper
+     │ String?  String?
 ─────┼─────────────────────
    1 │ alice    Alice
    2 │ bob      Bob
-   3 │ missing  missing    
+   3 │ missing  missing
 ```
 
 ### Example `@astable`
@@ -839,8 +840,8 @@ In DataFrames, you can return a `NamedTuple` from a function and then automatica
 ```julia
 julia> df = DataFrame(name = ["Alice Smith", "Bob Miller"])
 2×1 DataFrame
- Row │ name        
-     │ String      
+ Row │ name
+     │ String
 ─────┼─────────────
    1 │ Alice Smith
    2 │ Bob Miller
@@ -851,8 +852,8 @@ julia> @transform(df, @astable begin
            :last_name = s[2]
        end)
 2×3 DataFrame
- Row │ name         first_name  last_name  
-     │ String       SubString…  SubString… 
+ Row │ name         first_name  last_name
+     │ String       SubString…  SubString…
 ─────┼─────────────────────────────────────
    1 │ Alice Smith  Alice       Smith
    2 │ Bob Miller   Bob         Miller

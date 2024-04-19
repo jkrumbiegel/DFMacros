@@ -1,5 +1,4 @@
 using DataFrameMacros
-using DataFrames
 using Test
 
 @testset "transform & select" begin
@@ -84,9 +83,9 @@ end
 @testset "groupby" begin
     df = DataFrame(a = [-1, 1, -2, 2, -3, 3], b = randn(6))
     gdf = @groupby(df, abs(:a))
-    
+
     gdf2 = @groupby(df, :a = abs(:a))
-    
+
     gdf3 = @groupby(df, :x = abs(:a))
 end
 
@@ -139,7 +138,7 @@ module Mod1
 end
 
 @testset "modules" begin
-    
+
     using .Mod1
 
     df = DataFrame(a = [1, 2, 3])
@@ -217,21 +216,6 @@ end
         :y, qqq, :z = x * 2, "hello", x + 4
     end)
     @test df5 == df2 == df4
-end
-
-module HygieneModule
-    using DataFrameMacros
-    using DataFrames: DataFrames
-    using Test
-
-    @testset "macro hygiene" begin
-        df = DataFrames.DataFrame(x = [1, 2, 3])
-        @test !(@isdefined ByRow)
-        @test !(@isdefined passmissing)
-        @test !(@isdefined transform)
-        @test @transform(df, :y = @passmissing :x + 1) ==
-            DataFrames.transform(df, :x => DataFrames.ByRow(DataFrames.passmissing(x -> x + 1)) => :y)
-    end
 end
 
 @testset "@subset arg for `transform`" begin
